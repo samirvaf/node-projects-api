@@ -41,9 +41,10 @@ class ProjectController {
     return res.json(Project[req.projectId]);
   }
 
-  delete(req, res) {
+  destroy(req, res) {
+    const projectToDestroy = Project[req.projectId];
     Project.splice(req.projectId, 1);
-    return res.json(Project);
+    return res.json(projectToDestroy);
   }
 
   edit(req, res) {
