@@ -1,8 +1,8 @@
-const projects = [];
+import Project from '../models/Project';
 
 class ProjectController {
   index(req, res) {
-    return res.json(projects);
+    return res.json(Project);
   }
 
   store(req, res) {
@@ -12,7 +12,7 @@ class ProjectController {
       return res.status(400).json({ error: 'You should provide id and title' });
     }
 
-    const projectFound = projects.findIndex(project => project.id === id);
+    const projectFound = Project.findIndex(project => project.id === id);
 
     if (projectFound !== -1) {
       return res
@@ -20,13 +20,13 @@ class ProjectController {
         .json({ error: 'Project ID is already being used!' });
     }
 
-    projects.push({
+    Project.push({
       id,
       title,
       tasks: [],
     });
 
-    return res.json(projects);
+    return res.json(Project);
   }
 
   update(req, res) {
@@ -36,32 +36,14 @@ class ProjectController {
       return res.status(400).json({ error: 'You should provide an title' });
     }
 
-    const projectFound = projects.findIndex(
-      project => project.id === req.params.id
-    );
+    Project[req.projectId].title = title;
 
-    if (projectFound === -1) {
-      return res.status(400).json({
-        error: 'Project ID not found',
-      });
-    }
-
-    projects[projectFound].title = title;
-
-    return res.json(projects[projectFound]);
+    return res.json(Project[req.projectId]);
   }
 
   delete(req, res) {
-    const projectFound = projects.findIndex(
-      project => project.id === req.params.id
-    );
-
-    if (projectFound === -1) {
-      return res.status(400).json({ error: 'Project ID not found' });
-    }
-
-    projects.splice(projectFound, 1);
-    return res.json(projects);
+    Project.splice(req.projectId, 1);
+    return res.json(Project);
   }
 
   edit(req, res) {
@@ -71,17 +53,9 @@ class ProjectController {
       return res.status(400).json({ error: 'You must provide an task title' });
     }
 
-    const projectFound = projects.findIndex(
-      project => project.id === req.params.id
-    );
+    Project[req.projectId].tasks.push(title);
 
-    if (projectFound === -1) {
-      return res.status(400).json({ error: 'Project ID not found ' });
-    }
-
-    projects[projectFound].tasks.push(title);
-
-    return res.json(projects[projectFound]);
+    return res.json(Project[req.projectId]);
   }
 }
 
