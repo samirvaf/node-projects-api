@@ -9,21 +9,12 @@ class ProjectController {
     const { id, title } = req.body;
 
     if (!id || !title) {
-      return res
-        .status(400)
-        .json({ error: 'You should provide id and title ' });
+      return res.status(400).json({ error: 'You should provide id and title' });
     }
 
-    let projectExists = false;
+    const projectFound = projects.findIndex(project => project.id === id);
 
-    projects.forEach(project => {
-      if (project.id === id) {
-        projectExists = true;
-      }
-      return projectExists;
-    });
-
-    if (projectExists) {
+    if (projectFound !== -1) {
       return res
         .status(400)
         .json({ error: 'Project ID is already being used!' });
